@@ -1,0 +1,46 @@
+# Environment secrets
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!.env.template
+!**/.env.example
+!**/.env.template
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Logs
+*.log
+logs/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Private keys and certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local databases and backups
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.backup
+
+# TypeScript cache
+*.tsbuildinfo

@@ -1,0 +1,19 @@
+{
+  "name": "pulsewatch-backend",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev:api": "pnpm --filter @pulsewatch/api dev",
+    "dev:worker": "pnpm --filter @pulsewatch/worker dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @pulsewatch/database db:generate",
+    "db:push": "pnpm --filter @pulsewatch/database db:push",
+    "db:studio": "pnpm --filter @pulsewatch/database db:studio"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "tsx": "^4.19.2"
+  }
+}
