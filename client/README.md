@@ -1,29 +1,33 @@
 # PulseWatch Frontend
 
-Next.js App Router frontend starter for PulseWatch.
+Next.js 15 App Router frontend for PulseWatch.
 
-## Stack
-- Next.js 15
-- React 19
-- TypeScript
-- Tailwind CSS 3
-- Lucide icons
-- Recharts
+## Getting Started
 
-## Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Run development server:
+   ```bash
+   npm run dev
+   ```
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## API URL configuration
+
+Development uses `http://localhost:5001/api` when `NEXT_PUBLIC_API_URL` is unset. Copy the non-secret development example in `.env.example` to the client project root if you want to configure it explicitly.
+
+Production builds require `NEXT_PUBLIC_API_URL` to be set explicitly to an HTTPS API URL with a non-local hostname. Set it in the frontend provider's build environment before running `npm run build`; changing it after the build does not update the browser bundle. `NEXT_PUBLIC_*` values are public and must never contain tokens, passwords, or other secrets.
+
+Run isolated API URL configuration tests with:
+
 ```bash
-pnpm install
-cp .env.example .env.local
-pnpm dev
+npm run test:config
 ```
-Open http://localhost:3000.
 
-Set `NEXT_PUBLIC_API_URL` to the backend origin, e.g. `http://localhost:3001`.
+## Browser tests
 
-## Backend integration status
-- The monitor list and create form call `GET /api/v1/monitors` and `POST /api/v1/monitors`.
-- The backend starter currently keeps monitor routes fail-closed because authentication has not yet been implemented. You will therefore see an explicit API/authentication error until that backend phase is complete.
-- Dashboard metrics are derived from the monitor list response; no fabricated analytics are shown.
-- Incidents and authentication are clearly marked as not yet wired to backend endpoints.
-
-This is a frontend foundation, not a complete authenticated SaaS application. Do not deploy it as a finished product before implementing auth, organization selection, incident APIs, notification APIs, and end-to-end tests.
+Install the Playwright Chromium browser once with `npx playwright install chromium`, then run `npm run test:e2e`. The browser suite requires the local MySQL credentials in `server/.env`; it creates and drops a uniquely named test database and never uses the configured application database.

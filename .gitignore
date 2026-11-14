@@ -44,3 +44,11 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+# Database exports and backups
+*.sql
+backups/
+
+# Dependencies and generated files
+**/node_modules/
+**/.next/
+**/coverage/

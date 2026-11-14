@@ -1,7 +1,6 @@
-node_modules
-dist
+node_modules/
 .env
-.env.*
-!.env.example
-coverage
-.DS_Store
+/data/*.sqlite*
+/backups/
+backups/
+*.sql

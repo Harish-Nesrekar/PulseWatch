@@ -1,19 +1,40 @@
 {
   "name": "pulsewatch-backend",
+  "version": "1.0.0",
   "private": true,
-  "version": "0.1.0",
-  "packageManager": "pnpm@9.15.4",
+  "description": "PulseWatch API and uptime monitoring worker",
+  "main": "src/server.js",
   "scripts": {
-    "dev:api": "pnpm --filter @pulsewatch/api dev",
-    "dev:worker": "pnpm --filter @pulsewatch/worker dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "db:generate": "pnpm --filter @pulsewatch/database db:generate",
-    "db:push": "pnpm --filter @pulsewatch/database db:push",
-    "db:studio": "pnpm --filter @pulsewatch/database db:studio"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "worker": "node src/worker.js",
+    "db:migrate": "node scripts/db-migrate.js",
+    "db:baseline": "node scripts/db-baseline.js",
+    "db:backup": "node scripts/mysql-backup.js",
+    "db:restore-test": "node scripts/mysql-restore-test.js",
+    "check": "node --check src/config/env.js && node --check src/server.js && node --check src/db.js && node --check src/db/schema.js && node --check src/db/migration-runner.js && node --check src/middleware/auth.js && node --check src/middleware/require-same-origin.js && node --check src/middleware/require-https.js && node --check src/middleware/security-headers.js && node --check src/middleware/api-error-handler.js && node --check src/middleware/request-context.js && node --check src/middleware/manual-check-rate-limit.js && node --check src/utils/http.js && node --check src/utils/logger.js && node --check src/utils/graceful-shutdown.js && node --check src/utils/session-cookie.js && node --check src/routes/authRoutes.js && node --check src/routes/health.js && node --check src/services/alerts.js && node --check src/services/emailService.js && node --check src/services/monitor.js && node --check src/services/worker-health.js && node --check src/services/ssrf.js && node --check src/routes/monitors.js && node --check src/routes/incidents.js && node --check src/worker.js && node --check scripts/db-cli-config.js && node --check scripts/db-migrate.js && node --check scripts/db-baseline.js && node --check scripts/mysql-client-config.js && node --check scripts/mysql-backup.js && node --check scripts/mysql-restore-test.js && node --check migrations/001_initial_schema.js && node --check migrations/002_worker_health.js",
+    "test:monitor": "node --test tests/monitor.test.js",
+    "dev:all": "concurrently -k -n API,WEB -c blue,magenta \"npm run dev\" \"npm --prefix ../client run dev\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.24.6",
+    "web-push": "^4.0.0",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "typescript": "^5.7.3",
-    "tsx": "^4.19.2"
+    "concurrently": "^9.1.2",
+    "nodemon": "3.1.11"
   }
 }
