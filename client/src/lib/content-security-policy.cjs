@@ -4,7 +4,7 @@ function createContentSecurityPolicy(nonce, apiUrl) {
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
-    `style-src 'self' 'nonce-${nonce}'`,
+    "style-src 'self' 'unsafe-inline'",
     "style-src-attr 'unsafe-inline'",
     `connect-src 'self' ${apiOrigin}`,
     "img-src 'self' data: blob:",
