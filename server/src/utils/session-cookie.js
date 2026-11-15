@@ -9,7 +9,7 @@ function sessionCookieOptions() {
   return {
     httpOnly: true,
     secure: config.isProduction,
-    sameSite: 'strict',
+    sameSite: config.isProduction ? 'none' : 'lax',
     path: SESSION_COOKIE_PATH,
     maxAge: config.sessionCookieMaxAgeMs
   };
