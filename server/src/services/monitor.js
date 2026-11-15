@@ -491,15 +491,15 @@ async function saveCheckResult(monitorId, leaseToken, result) {
     // Create exactly one notification when the monitor transitions to DOWN.
     // This insert is part of the same transaction as the monitor/incident update.
 
-if (transitionedToDown) {
-  const eventKey = createHash('sha256')
-    .update(`${monitorId}:DOWN:${result.checkedAt}`)
-    .digest('hex');
+    if (transitionedToDown) {
+      const eventKey = createHash('sha256')
+        .update(`${monitorId}:DOWN:${result.checkedAt}`)
+        .digest('hex');
 
-  const notificationId = randomUUID();
+      const notificationId = randomUUID();
 
-  const [insertResult] = await connection.execute(
-    `
+      const [insertResult] = await connection.execute(
+        `
     INSERT INTO notifications (
       id,
       user_id,
@@ -514,24 +514,24 @@ if (transitionedToDown) {
     VALUES (?, ?, ?, ?, ?, 'MONITOR_DOWN', ?, ?, ?)
     ON DUPLICATE KEY UPDATE id = id
     `,
-    [
-      notificationId,
-      monitor.user_id,
-      monitorId,
-      incidentId,
-      eventKey,
-      `${monitor.name} is down`,
-      result.error || 'The monitor failed its health checks.',
-      incidentId
-        ? `/incidents/${incidentId}`
-        : `/monitors/${monitorId}`
-    ]
-  );
+        [
+          notificationId,
+          monitor.user_id,
+          monitorId,
+          incidentId,
+          eventKey,
+          `${monitor.name} is down`,
+          result.error || 'The monitor failed its health checks.',
+          incidentId
+            ? `/incidents/${incidentId}`
+            : `/monitors/${monitorId}`
+        ]
+      );
 
-  // Queue push delivery only when a new notification was inserted.
-  if (insertResult.affectedRows === 1) {
-    await connection.execute(
-      `
+      // Queue push delivery only when a new notification was inserted.
+      if (insertResult.affectedRows === 1) {
+        await connection.execute(
+          `
       INSERT INTO push_delivery_outbox (
         id,
         notification_id,
@@ -539,14 +539,14 @@ if (transitionedToDown) {
       )
       VALUES (?, ?, ?)
       `,
-      [
-        randomUUID(),
-        notificationId,
-        monitor.user_id
-      ]
-    );
-  }
-}
+          [
+            randomUUID(),
+            notificationId,
+            monitor.user_id
+          ]
+        );
+      }
+    }
 
 
 
@@ -727,9 +727,9 @@ async function runDueChecks(options = {}) {
     try {
       const concurrency = Number(getConfig().monitorConcurrency);
 
-if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 25) {
-  throw new Error('MONITOR_CONCURRENCY must be an integer between 1 and 25');
-}
+      if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 25) {
+        throw new Error('MONITOR_CONCURRENCY must be an integer between 1 and 25');
+      }
       const database = options.database || pool;
 
       const [dueMonitors] = await database.execute(
@@ -812,7 +812,7 @@ function startMonitorWorker(options = {}) {
       try {
         await healthStore.beginCycle?.();
 
-                await (options.runDueChecks || runDueChecks)({
+        await (options.runDueChecks || runDueChecks)({
           ...options,
 
           onCheckCompleted: async (monitor, result) => {
@@ -829,27 +829,27 @@ function startMonitorWorker(options = {}) {
         });
 
         // Process queued browser push notifications after each monitor cycle.
-if (options.onCycleCompleted) {
-  logger.info('push', 'push processor callback started', {
-    workerId
-  });
+        if (options.onCycleCompleted) {
+          logger.info('push', 'push processor callback started', {
+            workerId
+          });
 
-  try {
-    await options.onCycleCompleted();
+          try {
+            await options.onCycleCompleted();
 
-    logger.info('push', 'push processor callback completed', {
-      workerId
-    });
-  } catch (pushError) {
-    // Push delivery failures must not mark monitor checks as failed.
-    logger.error('push', 'push processor callback failed', {
-      workerId,
-      error: pushError
-    });
-  }
-}
+            logger.info('push', 'push processor callback completed', {
+              workerId
+            });
+          } catch (pushError) {
+            // Push delivery failures must not mark monitor checks as failed.
+            logger.error('push', 'push processor callback failed', {
+              workerId,
+              error: pushError
+            });
+          }
+        }
 
-await healthStore.completeCycle?.();
+        await healthStore.completeCycle?.();
       } catch (error) {
         await healthStore.failCycle?.();
 
