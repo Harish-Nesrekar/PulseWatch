@@ -51,11 +51,18 @@ function validateProductionApiUrl(value) {
     throw new Error('NEXT_PUBLIC_API_URL is required for production builds.');
   }
 
+  // Allow the same-origin Vercel API proxy.
+  if (value === '/api') {
+    return;
+  }
+
   let url;
   try {
     url = new URL(value);
   } catch {
-    throw new Error('NEXT_PUBLIC_API_URL must be a valid HTTPS URL.');
+    throw new Error(
+      'NEXT_PUBLIC_API_URL must be /api or a valid HTTPS URL.'
+    );
   }
 
   if (
@@ -71,6 +78,7 @@ function validateProductionApiUrl(value) {
     );
   }
 }
+
 
 const isProductionBuild =
   process.env.NODE_ENV === 'production' &&
