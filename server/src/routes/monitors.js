@@ -500,6 +500,7 @@ router.post('/:id/check', manualCheckRateLimit, async (req, res) => {
 // GET /api/monitors/:id/checks
 // --------------------------------------------------
 
+
 router.get('/:id/checks', async (req, res) => {
   try {
     const monitor = await getOwnedMonitor(
@@ -518,15 +519,15 @@ router.get('/:id/checks', async (req, res) => {
       500
     );
 
-    const [checks] = await pool.execute(
+    const [checks] = await pool.query(
       `
       SELECT *
       FROM checks
       WHERE monitor_id = ?
       ORDER BY checked_at DESC
-      LIMIT ?
+      LIMIT ${limit}
       `,
-      [req.params.id, limit]
+      [req.params.id]
     );
 
     return ok(res, checks);
@@ -536,8 +537,10 @@ router.get('/:id/checks', async (req, res) => {
       monitorId: req.params.id,
       error
     });
+
     return fail(res, 'Unable to load check history', 500);
   }
 });
+
 
 module.exports = router;
