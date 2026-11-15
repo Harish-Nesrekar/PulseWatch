@@ -17,11 +17,10 @@
     "dev:all": "concurrently -k -n API,WEB -c blue,magenta \"npm run dev\" \"npm --prefix ../client run dev\""
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "better-sqlite3": "^11.8.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
