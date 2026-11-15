@@ -1,5 +1,16 @@
+
 function createContentSecurityPolicy(nonce, apiUrl) {
-  const apiOrigin = new URL(apiUrl).origin;
+  let apiOrigin = "'self'";
+
+  if (apiUrl && apiUrl !== '/api') {
+    const parsedUrl = new URL(apiUrl);
+
+    if (parsedUrl.protocol !== 'https:') {
+      throw new Error('API URL must use HTTPS in production.');
+    }
+
+    apiOrigin = parsedUrl.origin;
+  }
 
   return [
     "default-src 'self'",
