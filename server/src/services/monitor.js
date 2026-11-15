@@ -725,7 +725,11 @@ async function runDueChecks(options = {}) {
 
   cyclePromise = (async () => {
     try {
-      const concurrency = getConfig().monitorConcurrency;
+      const concurrency = Number(getConfig().monitorConcurrency);
+
+if (!Number.isSafeInteger(concurrency) || concurrency < 1 || concurrency > 25) {
+  throw new Error('MONITOR_CONCURRENCY must be an integer between 1 and 25');
+}
       const database = options.database || pool;
 
       const [dueMonitors] = await database.execute(
@@ -748,9 +752,8 @@ async function runDueChecks(options = {}) {
         ORDER BY
           last_checked_at IS NOT NULL,
           last_checked_at ASC
-        LIMIT ?
-        `,
-        [concurrency]
+               LIMIT ${concurrency}
+        `
       );
 
       await Promise.all(

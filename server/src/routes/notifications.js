@@ -222,10 +222,10 @@ router.get('/', async (req, res) => {
       LEFT JOIN monitors m
         ON m.id = n.monitor_id
       WHERE n.user_id = ?
-      ORDER BY n.created_at DESC, n.id DESC
-      LIMIT ?
+ORDER BY n.created_at DESC, n.id DESC
+      LIMIT ${limit}
       `,
-      [userId, limit]
+      [userId]
     );
 
     const [countRows] = await pool.execute(

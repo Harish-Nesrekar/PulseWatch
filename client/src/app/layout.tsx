@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 import './globals.css';
-
 import { Toaster } from 'sonner';
 import { AuthGate } from '@/components/auth-gate';
 import { AuroraBackground } from '@/components/aurora-background';

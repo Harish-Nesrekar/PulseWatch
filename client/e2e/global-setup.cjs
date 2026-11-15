@@ -35,13 +35,31 @@ module.exports = async function globalSetup() {
     throw new Error('Refusing to use a non-isolated browser test database.');
   }
 
-  const connectionConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    charset: 'utf8mb4',
-  };
+  const fs = require('node:fs');
+const tls = require('node:tls');
+
+const caFile = process.env.DB_SSL_CA_FILE;
+
+if (!caFile) {
+  throw new Error('DB_SSL_CA_FILE is required for E2E database connections.');
+}
+
+const ca = fs.readFileSync(path.resolve(serverRoot, caFile), 'utf8');
+
+// Validate the CA before opening any database connection.
+tls.createSecureContext({ ca });
+
+const connectionConfig = {
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT || 3306),
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  charset: 'utf8mb4',
+  ssl: {
+    ca,
+    rejectUnauthorized: true,
+  },
+};
 
   const admin = await mysql.createConnection(connectionConfig);
 

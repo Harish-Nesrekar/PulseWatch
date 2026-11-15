@@ -81,7 +81,11 @@ test('login persists an HttpOnly session across reload and protects direct route
 test('logout blocks protected pages and API access, including browser Back', async ({ page }) => {
   await login(page);
   await expect(page).toHaveURL(/\/dashboard$/);
-  await page.getByRole('button', { name: 'Sign out' }).click();
+  await page.getByRole('button', { name: /Phase 5 Browser Test/ }).click();
+
+await expect(page.getByRole('menu', { name: 'Account' })).toBeVisible();
+
+await page.getByRole('menuitem', { name: 'Sign out' }).click();
   await expect(page).toHaveURL(/\/login$/);
 
   await page.goto('/dashboard');
@@ -119,7 +123,11 @@ test('login accepts protected internal redirects and rejects external redirects'
   await login(page, '/monitors');
   await expect(page).toHaveURL(/\/monitors$/);
 
-  await page.getByRole('button', { name: 'Sign out' }).click();
+  await page.getByRole('button', { name: /Phase 5 Browser Test/ }).click();
+
+await expect(page.getByRole('menu', { name: 'Account' })).toBeVisible();
+
+await page.getByRole('menuitem', { name: 'Sign out' }).click();
   await expect(page).toHaveURL(/\/login$/);
   await login(page, 'https://attacker.example/phish');
   await expect(page).toHaveURL(`${config.clientOrigin}/dashboard`);

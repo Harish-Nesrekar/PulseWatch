@@ -12,12 +12,13 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npx next dev --hostname 127.0.0.1 --port 3010',
-    url: 'http://127.0.0.1:3010',
-    timeout: 120_000,
-    reuseExistingServer: false,
-    env: {
-      NEXT_PUBLIC_API_URL: 'http://127.0.0.1:5010/api',
-    },
+  command: 'npm run start -- --hostname 127.0.0.1 --port 3010',
+  url: 'http://127.0.0.1:3010',
+  timeout: 120_000,
+  reuseExistingServer: false,
+  env: {
+    NODE_ENV: 'production',
+    NEXT_PUBLIC_API_URL: 'http://127.0.0.1:5010/api',
   },
+},
 });
