@@ -51,15 +51,14 @@ const alertManager = createAlertManager();
 
 const PORT = config.port;
 const CLIENT_ORIGIN = config.clientOrigin;
+
+// Trust Render's reverse proxy so Express detects HTTPS correctly.
+app.set('trust proxy', 1);
+
 const healthHandlers = createHealthHandlers({
   database: pool,
   progressTimeoutMs: Math.max(120000, config.monitorTimeoutMs + 30000)
 });
-
-app.set(
-  'trust proxy',
-  config.trustedProxyIps.length > 0 ? config.trustedProxyIps : false
-);
 
 app.use(requestContext);
 
