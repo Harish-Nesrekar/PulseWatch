@@ -1,4 +1,4 @@
-
+import { headers } from 'next/headers';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
@@ -18,11 +18,12 @@ export const metadata: Metadata = {
   applicationName: 'PulseWatch',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: ReactNode;
 }) {
+  await headers();
   return (
     <html lang="en">
       <body className="min-h-screen antialiased">
