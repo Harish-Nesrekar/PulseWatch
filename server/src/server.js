@@ -122,7 +122,7 @@ async function startServer() {
       logger.info('api', 'server listening', { port: PORT });
     };
     server = config.isProduction
-      ? app.listen(PORT, '127.0.0.1', onListening)
+      ? app.listen(PORT, '0.0.0.0', onListening)
       : app.listen(PORT, onListening);
 
     if (config.monitorWorkerEnabled) {
